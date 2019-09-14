@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+	<!-- Avoid console logging to prevent the Dropbox key from being shown in the browser -->
+    <meta charset="utf-8">
+    <title> Style File Upload</title>
+    <style type="text/css">
+    .loader {
+  position: absolute;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
+.overlay {
+    background: #FFFFFF;  
+    position: absolute;  
+    top: 0;                  
+    right: 0;               
+    bottom: 0;
+    left: 0;
+    opacity: 1;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.load_text {
+  width: 90px;
+  font-family: sans-serif;
+  color: #FFFF;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 45px);
+
+
+}
+
+        #custom-button {
+            padding: 10px;
+            color: white;
+            background-color: #119FC2;
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #custom-button:hover {
+            background-color: #77EDF1;
+        }
+
+        #custom-text {
+            margin-left: 10px;
+            font-family: sans-serif;
+            color: #aaa;
+        }
+        
+        #submit-button {
+            padding: 10px;
+            color:white
+            background-color: #119FC2;
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor:pointer;
+            }
+        #submit-button:hover {
+            background-color: #77EDF1;
+            }
+        
+        
+        .thumb {
+    height: 100px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+  }
+    </style>
+</head>
+<body>
+	<!--Loader displays while files are being uploaded to Dropbox. Mostly used for videos-->
+  <div class="overlay" id="loader">
+    <div id="load_text"> Uploading Files</div>
+  <div class="loader" > </div>
+      </div>
+<button type="button" id="custom-button"> Choose File </button>
+ <!--    <span id="custom-text"> No file chosen </span> -->
+ <br>
+
+<input type="file" id="files" name="files[]" accept="image/*, video/*" hidden="true" multiple />
+<output id="list"></output>
+<br>
+<br>
+
+<button onclick="submit()" id="submit-button1">
+     Upload
+  
+<script>
+ const loader = document.getElementById("loader");
+  var dropboxToken = "A9ShmY73j1AAAAAAAAAAdbCqOy-D-yFnlqjG-YG-XwSw0auys-_Xj1rNEUQKtz92";
+  var files = [];// FileList object
+    const hiddenBtn = document.getElementById("files");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+    customBtn.addEventListener("click", function(){
+        hiddenBtn.click();
+    })
+loader.hidden = true;
+  var picArray = []; //array of the image url's
+
+
+/* Store all chosen files in the files array */
+function handleFileSelect(evt) {
+        loader.hidden = false;
+
+    var allImages = evt.target.files;
+    document.getElementById('list').innerHTML = ""; //clear any image thumbnails
+    files = []; //clear the files array
+    picArray = []; //clear the picArray
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0; i<allImages.length && i<5; i++) {
+        var f = allImages[i];
+        //set files to only the first n number of images
+        files[i] = f;       
+      /* Show image thumbnails */
+      var reader = new FileReader();
+      console.log("f : " + allImages[i]);
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          this.height = 666;
+          this.width = 1000;
+          // Render thumbnail.
+         
+            loader.hidden = true;
+          
+          var span = document.createElement('span');
+          span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+          document.getElementById('list').insertBefore(span, null);
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+  }
+  /*Trigger the uploadFile request to Dropbox */
+function submit(){ //upload button
+  loader.hidden = false;
+  var hide = false; //the hide boolean is turned true once the file array has reached its full length.
+  					//dictates whether the loader is hidden or not.
+    /* if the user clicks upload without selecting files */
+    if(files==null || files == undefined){
+        	//unnecessary 
+        }
+   /* get all the images in FileList object and upload them */
+   for (var i = 0, f; f = files[i]; i++) {
+    if(i === files.length-1){
+      hide = true;
+    }
+   uploadFile(f, hide);
+  
+    }
+          }
+/* takes in a single image file and calls the upload function in dropBox 
+   also calls createLink function*/
+function uploadFile(file, hide){
+var currentdate = new Date(); 
+/*create unique identifier to prevent duplicates on Dropbox file */
+var identifier =  currentdate.getDate() + ":"
+                + (currentdate.getMonth()+1)  + ":"
+                + currentdate.getFullYear()  +":"
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+  var xhr = new XMLHttpRequest(); // XMLHTTP object
+  xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
+  //documentation at https://www.dropbox.com/developers/documentation/http/documentation
+  xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  console.log(file.name);
+xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+            path: '/Watermark Needed/' + identifier +  file.name ,
+          mode: 'add',
+          autorename: true,
+          mute: false
+      }));
+
+      //send the request
+      xhr.send(file);
+
+      /* when the request is done, then call create shared link */
+      xhr.onreadystatechange = function() {
+
+      if (xhr.readyState === 4) {
+      createLink(file, hide, identifier)
+      } 
+  }
+      }
+
+      
+
+    window.onmessage = (event) => {
+    sendMessage(picArray);
+
+    console.log("images here: " + picArray);
+    }
+
+ /* createLink takes in a single image file and creates 
+    an HTTP request to create a shared link */     
+function createLink(file, hide, identifier){
+var response = new XMLHttpRequest();
+response.onreadystatechange = function() {
+	/* when ready, then send the response to Wix*/
+    if (response.readyState === 4) {
+      var jsonResponse = response.response;
+      sendMessage(response.response);
+
+      /* hide the loader if it is the last file uploaded*/
+      if(hide){
+        console.log("hide loader");
+      loader.hidden = true;
+    }
+      picArray.push(response.response);
+      } 
+  }
+      response.open('POST', 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings');
+      response.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+      response.setRequestHeader('Content-Type', 'application/json');
+
+var data= JSON.stringify({ "path": "/Watermark Needed/" + identifier +file.name , 
+"settings": 
+{ "requested_visibility": "public" }});
+    response.send(data);
+
+    
+    }
+
+  /* sendMessage function, sends the image src to the wix page code*/
+ function sendMessage(msg){
+          window.parent.postMessage(msg, "*");
+      }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
+</body>
+</html>
