@@ -4,7 +4,7 @@ Documentation for https://ajhsu3.wixsite.com/mares-mexicanos-a. Docs contain HTM
 # Submissions
 The submissions page is a dynamic webpage for each divesite that ends with "user" e.g. [Clarion](
 https://ajhsu3.wixsite.com/mares-mexicanos-a/update1/CLARION/user). (To change this link format, go to the Update1 User (Nombre Sitio) page settings on the Wix Editor) 
-After choosing a file and clicking upload, the HTML code will upload the file(s) to [Dropbox](https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0) and create a link(s) for each file. These will be saved into the database once the user hits submit.
+After choosing a file and clicking upload, the HTML code will upload the file to [Dropbox](https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0) and create a link for each file. The link will be saved into the database once the user hits submit.
 
 # Approval
 Navigate to the Submissions-final page (URL not available currently) on Wix to approve image submissions. Link to video and description approval is present on the page. Upon clicking "Add," images are watermarked using Javascript and transferred to "downloadToWix" database. To prevent loss of resolution and give Wix authorization to resize images without cropping, images must be downloaded to the Wix Media Manager. Currently there does not seem to be a way to programmatically upload files to the Media Manager. Tried to use WixMP but it seems to be deprecated https://console.wixmp.com/platform/external-user, maybe looking into https://github.com/wix/media-platform-java-sdk might provide a solution. 
