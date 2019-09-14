@@ -126,7 +126,6 @@ function handleFileSelect(evt) {
         files[i] = f;       
       /* Show image thumbnails */
       var reader = new FileReader();
-      console.log("f : " + allImages[i]);
       // Closure to capture the file information.
       reader.onload = (function(theFile) {
         return function(e) {
@@ -181,7 +180,6 @@ var identifier =  currentdate.getDate() + ":"
   //documentation at https://www.dropbox.com/developers/documentation/http/documentation
   xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
   xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-  console.log(file.name);
 xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
             path: '/Watermark Needed/' + identifier +  file.name ,
           mode: 'add',
@@ -206,7 +204,6 @@ xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
     window.onmessage = (event) => {
     sendMessage(picArray);
 
-    console.log("images here: " + picArray);
     }
 
  /* createLink takes in a single image file and creates 
@@ -221,7 +218,6 @@ response.onreadystatechange = function() {
 
       /* hide the loader if it is the last file uploaded*/
       if(hide){
-        console.log("hide loader");
       loader.hidden = true;
     }
       picArray.push(response.response);
