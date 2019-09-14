@@ -13,3 +13,6 @@ To bypass this problem, please download the Chrome extension "Custom Javascript 
 
 ![GitHub Logo](https://www.dropbox.com/s/6dgo1pc4kqgew7b/69980026_934934786845855_4816457028169891840_n.png?raw=1)
 
+http://github.com - automatic!
+[GitHub](http://github.com)
+
