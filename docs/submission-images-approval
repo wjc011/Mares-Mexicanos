@@ -1,0 +1,294 @@
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <!-- Dropbox sdk -->
+      <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+
+    <img id="image">
+      <img id="image2" >
+  <body onload="load()">
+    <br>
+    
+  <style type="text/css">
+
+  body {
+    background-color: rgba(80, 80, 80, .4);
+  }
+
+    .loader {
+    position: absolute;
+    top: 35px;
+    left: 471px;
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    animation: spin 2s linear infinite;
+  }
+  .overlay {
+      background: #FFFFFF;  
+      position: absolute;  
+      top: 500;                  
+      right: 500;               
+      bottom: 500;
+      left: 500;
+      opacity: 1;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  #load_text {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 165px;
+    left: 516px;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 24px;
+  }
+  </style>
+    <br>
+      <div class="overlay" id="loader">
+      <div id="load_text"> Watermarking Images</div>
+    <div class="loader" > </div>
+        </div>
+
+
+  <script>
+    /* create variable for loader and hide */
+    const loader = document.getElementById("loader");
+
+  document.body.style.backgroundColor = "rgba(80, 80, 80, 0)";
+
+    loader.hidden = true;
+      var dropboxToken = "A9ShmY73j1AAAAAAAAAAdbCqOy-D-yFnlqjG-YG-XwSw0auys-_Xj1rNEUQKtz92";
+  function load(){
+  }
+
+  /* Documentation found at http://cwestblog.com/2017/06/11/javascript-use-canvas-to-watermark-images/ */
+  function watermarkImage(elemImage, text, callback) {
+    // Create test image to get proper dimensions of the image.
+    var testImage = new Image();
+    testImage.onload = function() {
+      var h = testImage.height, w = testImage.width, img = new Image();
+      // Once the image with the SVG of the watermark is loaded...
+      img.onload = function() {
+
+        
+        // Make canvas with image and watermark
+        var canvas = Object.assign(document.createElement('canvas'), {width: w, height: h});
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(testImage, 0, 0);
+        ctx.drawImage(img, 0, 0);
+        // If PNG can't be retrieved show the error in the console
+        try {
+          elemImage.src = canvas.toDataURL('image/png');
+          callback();
+        }
+        catch (e) {
+          console.error('Cannot watermark image with text:', {src: elemImage.src, text: text, error: e});
+        }
+      };
+      //var resolution = calculateAspectRatioFit(elemImage.width, elemImage.height, 600, 420)
+      // SVG image watermark (HTML of text at bottom right)
+      img.src = 'data:image/svg+xml;base64,' + window.btoa(
+        '<svg xmlns="http://www.w3.org/2000/svg" height="' + h + '" width="' + w + '">' +
+          '<foreignObject width="100%" height="100%">' +
+            '<div xmlns="http://www.w3.org/1999/xhtml">' +
+              '<div style="position: absolute;' +
+                          'right: 0;' +
+                          'bottom: 0;' +
+                          'font-family: Arial;' +
+                          'font-size: 15pt;' +
+                          'background: #000;' +
+                          'color: #fff;' +
+                          'padding: 0.25em;' +
+                          'border-radius: 0.25em;' +
+                          'opacity: 0.6;' +
+                          'margin: 0 0.125em 0.125em 0;' +
+              '">' + text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</div>' +
+            '</div>' +
+          '</foreignObject>' +
+        '</svg>'
+      );
+    };
+    testImage.src = elemImage.src;
+  }
+  var image = document.getElementById("image");
+  var image2 = document.getElementById("image2");
+
+
+  /*Receive dropbox path from wix for local download */
+  window.onmessage = (event) => {
+  document.body.style.backgroundColor = "rgba(80, 80, 80, .3)";
+
+
+
+  loader.hidden = false;
+
+  var dbx = new Dropbox.Dropbox({accessToken: dropboxToken, fetch: fetch});
+  var data = event.data;
+
+  /*download the image from Dropbox to read data as url. */
+  dbx.filesDownload({path: '/Watermark Needed/' + data.path})
+      .then(function (response) {
+          var blob = response.fileBlob;
+          var reader = new FileReader();
+          reader.addEventListener("loadend", function() {
+            
+            /*Create image element to pass into watermarking param*/
+            var img = document.createElement("image");
+            img.src = reader.result;
+             
+
+       
+            /* watermark the image once it has been downloaded */
+          watermarkImage(img, data.watermark.name, function(){
+                 /* convert back to file once the image is watermarked */
+                  urltoFile(img.src, data.path)
+    .then(function(file){
+
+      /* upload the file once the image has been converted back to file.
+      *  id used to create the new path
+      */
+    uploadFile(file, data.watermark, data.name, data.id);
+
+
+    })
+              });
+
+          });
+          reader.readAsDataURL(blob);
+      })
+      .catch(function (error) {
+          
+      })
+
+  }
+
+  /* Convert a URL to file */
+  function urltoFile(url, filename, mimeType){
+      mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+      return (fetch(url)
+          .then(function(res){return res.arrayBuffer();})
+          .then(function(buf){return new File([buf], filename, {type:mimeType});})
+      );
+  }
+   function sendMessage(msg){
+            window.parent.postMessage(msg, "*");
+        }
+  sendMessage(1);
+
+  /* Calls Dropbox POST request to upload the file into the Atlas Images folder*/
+
+  function uploadFile(file, info, name, id){
+     
+            
+    var xhr = new XMLHttpRequest(); // XMLHTTP object
+    var noUnderscore = name.replace(/_/g, " ");
+     noUnderscore = noUnderscore.replace(/Ñ/g, "N");
+   console.log('/Atlas Images/' + noUnderscore + '/' + file.name);
+     xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
+    //documentation at https://www.dropbox.com/developers/documentation/http/documentation
+    xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+              path: '/Atlas Images/' +  noUnderscore + '/' +file.name,
+            mode: 'add',
+            autorename: true,
+            mute: false
+        }));
+
+        //send the request
+        xhr.send(file);
+
+        /* when the request is done, create a copy in the Submissions folder */
+        xhr.onreadystatechange = function() {
+
+        if (xhr.readyState === 4) {
+       uploadWix(file, info, name, id);
+        } 
+    }
+        }
+
+  /* upload file to dropbox Submission Photos for wix download */
+  function uploadWix(file, info, name, id, path){
+
+
+    var xhr = new XMLHttpRequest(); // XMLHTTP object
+    //call open
+    var noUnderscore = name.replace(/_/g, " ");
+
+     xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
+    //documentation at https://www.dropbox.com/developers/documentation/http/documentation
+    xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+              path: '/Submission Photos/' + file.name,
+            mode: 'add',
+            autorename: true,
+            mute: false
+        }));
+
+        //send the request
+        xhr.send(file);
+
+        /* when the request is done, then call create shared link */
+        xhr.onreadystatechange = function() {
+
+        if (xhr.readyState === 4) {
+       createLink(file, info, name, id, file.name)
+        } 
+    }
+
+
+
+
+  }
+
+  /* Call Dropbox createlink POST request.
+  *  Send the final link to Wix 
+  */
+  function createLink(file, info, name, id, path){
+          var noUnderscore = name.replace(/_/g, " ");
+     noUnderscore = noUnderscore.replace(/Ñ/g, "N");
+
+  var response = new XMLHttpRequest();
+  response.onreadystatechange = function() {
+      if (response.readyState === 4) {
+        var jsonResponse = { "response" : response.response,
+        "info": info, "name": name, "id": id, "path": path};
+        sendMessage(jsonResponse);
+          setTimeout(function(){ 
+        loader.hidden = true;
+        document.body.style.backgroundColor = "rgba(80, 80, 80, 0)";
+
+           }, 2000);
+              } 
+    }
+        response.open('POST', 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings');
+        response.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+        response.setRequestHeader('Content-Type', 'application/json');
+  var data= JSON.stringify({ "path": "/Atlas Images/" +  noUnderscore + '/' +file.name, 
+  "settings": 
+  { "requested_visibility": "public" }});
+      response.send(data);
+
+      
+      }
+      function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+        //return { width: srcWidth, height: srcHeight};
+        var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+
+      return { width: srcWidth*ratio, height: srcHeight*ratio };
+   }
+
+  </script>
+  </body>
+  </html>
