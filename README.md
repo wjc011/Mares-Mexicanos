@@ -9,7 +9,7 @@ After choosing a file and clicking upload, the HTML code will upload the file to
 # Approval
 Navigate to the Submissions-final page (URL not available currently) on Wix to approve image submissions. Link to video and description approval is present on the page. Upon clicking "Add," images are watermarked using Javascript and transferred to "downloadToWix" database. The HTML also uploads a copy to the [Atlas Images Folder](https://www.dropbox.com/sh/58l5ubjgp9v80pl/AAD5TSWpV60rpa6pdXAq8gvAa?dl=0) on dropbox. 
 
-**Note: Once files are added to the Atlas Image Folder, the un-watermarked versions can be deleted from the [Watermark Needed Folder](https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0) to save space.
+**Note:** Once files are added to the Atlas Image Folder, the un-watermarked versions can be deleted from the [Watermark Needed Folder](https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0) to save space.
 
 To prevent loss of resolution and give Wix authorization to resize images without cropping, images must be downloaded to the Wix Media Manager. Currently there does not seem to be a way to programmatically upload files to the Media Manager. Tried to use WixMP but it seems to be deprecated https://console.wixmp.com/platform/external-user, maybe looking into https://github.com/wix/media-platform-java-sdk might provide a solution. 
 
