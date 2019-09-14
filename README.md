@@ -2,7 +2,8 @@
 Documentation for https://ajhsu3.wixsite.com/mares-mexicanos-a. Docs contain HTML components from the website.
 
 # Submissions
-The submissions page is a dynamic webpage for each divesite that ends with "user" e.g. https://ajhsu3.wixsite.com/mares-mexicanos-a/update1/CLARION/user. (To change this link format, go to the Update1 User (Nombre Sitio) page settings on the Wix Editor) 
+The submissions page is a dynamic webpage for each divesite that ends with "user" e.g. [Clarion](
+https://ajhsu3.wixsite.com/mares-mexicanos-a/update1/CLARION/user). (To change this link format, go to the Update1 User (Nombre Sitio) page settings on the Wix Editor) 
 After choosing a file and clicking upload, the HTML code will upload the file(s) to https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0 and create a link(s) for each file. These will be saved into the database once the user hits submit.
 
 # Handling Submissions
@@ -13,6 +14,5 @@ To bypass this problem, please download the Chrome extension "Custom Javascript 
 
 ![GitHub Logo](https://www.dropbox.com/s/6dgo1pc4kqgew7b/69980026_934934786845855_4816457028169891840_n.png?raw=1)
 
-http://github.com - automatic!
-[GitHub](http://github.com)
+
 
