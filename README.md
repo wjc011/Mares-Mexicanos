@@ -18,7 +18,7 @@ To bypass this problem, please download the Chrome extension "Custom Javascript 
 
 ![GitHub Logo](https://www.dropbox.com/s/6dgo1pc4kqgew7b/69980026_934934786845855_4816457028169891840_n.png?raw=1)
 
-This program will automatically execute everytime the Wix Editor is opened on that device and will upload any images that are in the "downloadToWix" database step-by-step. Once the script finishes running, the watermarked images will be on the live site.
+This program will automatically execute everytime the Wix Editor is opened on that device and will upload any images that are in the "downloadToWix" database step-by-step. Once the script finishes running, the watermarked images will be on the live site. Because the images are now stored in the Wix Media Manager, the script will delete the dropbox folder containing the images (the folder will be re-created everytime a new file is uploaded), so the only copies of the watermarked image are in the Media Manager and the Atlas Images folder.
 
 
 
