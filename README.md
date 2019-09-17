@@ -3,7 +3,7 @@ Documentation for https://ajhsu3.wixsite.com/mares-mexicanos-a. Docs contain HTM
 
 # Submissions
 The submissions page is a dynamic webpage for each divesite that ends with "user" e.g. [Clarion](
-https://ajhsu3.wixsite.com/mares-mexicanos-a/update1/CLARION/user). (To change this link format, go to the Update1 User (Nombre Sitio) page settings on the Wix Editor) 
+https://ajhsu3.wixsite.com/mares-mexicanos-a/update1/CLARION/user). (To change this link format, go to the Update1 User (Nombre Sitio) page settings on the Wix Editor). 
 After choosing a file and clicking upload, the HTML code will upload the file to [Dropbox](https://www.dropbox.com/sh/wuzzxg4scugdczp/AABxXF0yRyzLp2CPfNA2Rg6Qa?dl=0) and create a link for each file. The link will be saved into the database once the user hits submit.
 
 # Approval
