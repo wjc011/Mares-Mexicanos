@@ -22,7 +22,7 @@ This program will automatically execute everytime the Wix Editor is opened on th
 
 # Databases
 There are seven databases on the Wix page:
-* Update1
+* **Update1 - ** the main database. This database contains all of the dive sites, along with their descriptions, photos, and videos. Videos are stored in separate columns - vid1, vid2, vid3, vid4, and vid5. Photos are stored as a json array under the pictures column, with each json object consisting of the picture's link, date (date of picture taken), email, and the name of the user who submitted it.   
 
 
 
